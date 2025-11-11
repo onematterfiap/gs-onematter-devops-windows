@@ -4,40 +4,81 @@
     ViewData["Title"] = "Detalhes da Vaga";
 }
 
-<h2>@ViewData["Title"]</h2>
-<hr />
+<div class="page-container">
 
-<div>
-    <h4>Vaga</h4>
+    <div class="page-header">
+        <h2 class="page-title">
+            <i class="fas fa-eye me-2"></i>
+            @ViewData["Title"]
+        </h2>
+        <div class="page-header-actions">
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+                <i class="fas fa-pencil-alt me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar à Lista
+            </a>
+        </div>
+    </div>
 
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Editar</a> |
-    <a asp-action="Index" class="btn btn-outline-secondary">Voltar à Lista</a>
+    <div class="card shadow-sm">
+        <div class="card-body p-4 p-md-5">
+
+            <dl class="row">
+                <dt class="col-md-3">
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+                <dd class="col-md-9">
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+
+                <hr class="my-3">
+
+                <dt class="col-md-3">
+                    @Html.DisplayNameFor(model => model.Location)
+                </dt>
+                <dd class="col-md-9">
+                    @Html.DisplayFor(model => model.Location)
+                </dd>
+
+                <hr class="my-3">
+
+                <dt class="col-md-3">
+                    @Html.DisplayNameFor(model => model.Status)
+                </dt>
+                <dd class="col-md-9">
+                    @{
+                        string statusText = Model.Status.ToString();
+                        string badgeClass = "bg-secondary";
+
+                        switch (statusText.ToLower())
+                        {
+                            case "aberta":
+                                badgeClass = "bg-success";
+                                break;
+                            case "fechada":
+                                badgeClass = "bg-danger";
+                                break;
+                            case "pausada":
+                                badgeClass = "bg-warning text-dark";
+                                break;
+                        }
+                    }
+                    <span class="badge @badgeClass rounded-pill fs-small">@statusText</span>
+                </dd>
+
+                <hr class="my-3">
+
+                <dt class="col-md-3">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-md-9">
+                    <div class="job-description-display">
+                        @Html.DisplayFor(model => model.Description)
+                    </div>
+                </dd>
+            </dl>
+
+        </div>
+    </div>
 </div>

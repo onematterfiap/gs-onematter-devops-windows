@@ -259,3 +259,18 @@ footer {
     .empty-state-card .card-body {
         padding: 4rem 2rem;
     }
+
+.job-description-display {
+    white-space: pre-wrap;
+    line-height: 1.7;
+}
+
+/* Melhora o espaçamento da lista de detalhes (dl) */
+.page-container .card-body dl {
+    margin-bottom: 0;
+}
+
+.page-container .card-body dt {
+    font-weight: 600;
+    color: var(--cor-cinza-medio);
+}

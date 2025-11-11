@@ -4,44 +4,78 @@
     ViewData["Title"] = "Excluir Vaga";
 }
 
-<h2>@ViewData["Title"]</h2>
-<h3 class="text-danger">Tem a certeza que deseja excluir esta vaga?</h3>
-<hr />
+<div class="page-container">
 
-<div>
-    <h4>Vaga</h4>
+    <div class="page-header">
+        <h2 class="page-title">
+            <i class="fas fa-trash-alt me-2"></i>
+            @ViewData["Title"]
+        </h2>
+        <div class="page-header-actions">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-2"></i>Cancelar
+            </a>
+        </div>
+    </div>
 
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
 
-    <form asp-action="Delete">
-        @* Este campo oculto é crucial para o POST saber qual ID excluir *@
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Excluir" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
-    </form>
+            <div class="card shadow-sm border-danger">
+
+                <div class="card-header bg-danger text-white">
+                    <h4 class="h5 mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Tem a certeza que deseja excluir esta vaga?
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <p class="lead">Você está prestes a excluir permanentemente a vaga listada abaixo. Esta ação não pode ser desfeita.</p>
+
+                    <hr class="my-4">
+
+                    <dl class="row">
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Title)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Title)
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Location)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @Html.DisplayFor(model => model.Location)
+                        </dd>
+                        <dt class="col-sm-3">
+                            @Html.DisplayNameFor(model => model.Status)
+                        </dt>
+                        <dd class="col-sm-9">
+                            @{
+                                string statusText = Model.Status.ToString();
+                                string badgeClass = "bg-secondary";
+                                switch (statusText.ToLower())
+                                {
+                                    case "aberta": badgeClass = "bg-success"; break;
+                                    case "fechada": badgeClass = "bg-danger"; break;
+                                    case "pausada": badgeClass = "bg-warning text-dark"; break;
+                                }
+                            }
+                            <span class="badge @badgeClass rounded-pill fs-small">@statusText</span>
+                        </dd>
+                    </dl>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <form asp-action="Delete">
+                        @* Este campo oculto é crucial para o POST saber qual ID excluir *@
+                        <input type="hidden" asp-for="Id" />
+                        <input type="submit" value="Sim, Excluir Permanentemente" class="btn btn-danger btn-lg" />
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
