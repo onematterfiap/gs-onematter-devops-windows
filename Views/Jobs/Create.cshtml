@@ -1,0 +1,53 @@
+﻿@model OneMatter.Models.ViewModels.CreateJobViewModel
+
+@{
+    ViewData["Title"] = "Publicar Nova Vaga";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+
+            @* Este div é crucial para mostrar os erros de validação do controlador *@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                @* O 'asp-for' liga este label ao nosso ViewModel *@
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                @* O 'asp-validation-for' mostra o erro específico deste campo (ex: "O título é obrigatório.") *@
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                @* O DataType.MultilineText no ViewModel sugere um textarea, 
+                  mas podemos forçá-lo aqui com 'asp-for' num textarea.
+                *@
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Publicar Vaga" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Esta secção é necessária para que a validação do lado do cliente (no browser) funcione *@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
