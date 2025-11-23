@@ -170,25 +170,26 @@ Exemplos de Uso
 
 ![Login](https://github.com/user-attachments/assets/e400e155-c9fc-4a25-9bec-aada9d6e3b1e)
 
-3.  **Dashboard:** Vê a Landing Page com os valores da empresa.
+2.  **Dashboard:** Vê a Landing Page com os valores da empresa.
 
 ![Dashboard](https://github.com/user-attachments/assets/2f99fb0e-0c1f-4a1e-99cf-cc577167fb45)
 
-5.  **Criar Vaga:** Registra uma nova vaga "Desenvolvedor Java Senior".
+3.  **Criar Vaga:** Registra uma nova vaga "Desenvolvedor Java Senior".
 
 ![Criar](https://github.com/user-attachments/assets/a3bd9e9f-8f1f-4e5d-9a8b-4875289d1c00)
 
 7.  **Triagem:**
 
     -   O recrutador clica em "Ver Candidatos" na vaga criada.
+      ![Ver Candidatos](https://github.com/user-attachments/assets/2ff08c69-1f11-477f-8389-efba486718a1)
 
     -   O sistema apresenta uma lista:
 
-        -   *Candidato #45*: "Java, Spring Boot" (Status: Pendente) -> **[APROVAR]**
+        -   *Candidato #21*: "C#, .NET Core, SQL, Azure" (Status: Aprovado_Etapa1)
 
-        -   *Candidato #46*: "Python, Django" (Status: Pendente)
+        -   *Candidato #24*: "Java, Spring Boot, Angular, MySQL" (Status: Pendente) -> **[APROVAR]**
 
-    -   O recrutador analisa as skills (sem ver nomes) e aprova o #45.
+    -   O recrutador analisa as skills (sem ver nomes) e aprova o #24.
 
     -   O status muda para "Aprovado para Teste".
 
