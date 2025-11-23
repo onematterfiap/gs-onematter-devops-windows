@@ -178,7 +178,7 @@ Exemplos de Uso
 
 ![Criar](https://github.com/user-attachments/assets/a3bd9e9f-8f1f-4e5d-9a8b-4875289d1c00)
 
-7.  **Triagem:**
+4.  **Triagem:**
 
     -   O recrutador clica em "Ver Candidatos" na vaga criada.
       ![Ver Candidatos](https://github.com/user-attachments/assets/2ff08c69-1f11-477f-8389-efba486718a1)
