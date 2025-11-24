@@ -1,0 +1,24 @@
+services:
+  onematter-web:
+    # Nome da imagem
+    image: onematter-dotnet-web
+
+    # Configuração de build
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Nome do container e reinício automático (Requisito: Execução em background)
+    container_name: onematter-web-container
+    restart: always
+
+    # Mapeia a porta do host para a porta do container
+    ports:
+      - "8080:8080"
+
+    # Variáveis de ambiente para o ASP.NET Core
+    environment:
+      # Força o ambiente de produção (boas práticas)
+      - ASPNETCORE_ENVIRONMENT=Production
+      # Permite rodar como non-root (opcional, mas recomendado)
+      - ASPNETCORE_URLS=http://+:8080
