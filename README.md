@@ -1,4 +1,5 @@
-OneMatter - Portal do Recrutador
+# OneMatter - Portal do Recrutador
+
 ================================
 
 > **Global Solution 2025/2 - FIAP** > **Tema:** O Futuro do Trabalho
@@ -7,44 +8,39 @@ OneMatter - Portal do Recrutador
 
 O **OneMatter** é uma plataforma de recrutamento ético projetada para combater o viés inconsciente nos processos seletivos. Este repositório contém o **Portal do Recrutador**, uma aplicação web desenvolvida em **ASP.NET Core MVC** que permite a gestão de vagas e a realização de uma triagem inicial 100% anônima.
 
-Equipe
-------
+---
+
+## Equipe
 
 -   **Arthur Thomas Mariano de Souza (RM 561061)**
-
 -   **Davi Cavalcanti Jorge (RM 559873)**
-
 -   **Mateus da Silveira Lima (RM 559728)**
 
-Visão Geral
------------
+---
+
+## Visão Geral
 
 O objetivo principal deste portal é separar a avaliação técnica da identidade pessoal do candidato.
 
 1.  **Gestão de Vagas:** O recrutador cria e gere oportunidades de emprego.
-
-2.  **Triagem Anônima (Core):** O sistema oculta propositalmente dados sensíveis (Nome, Género, Foto) durante a primeira fase. O recrutador vê apenas um ID neutro (ex: "Candidato #123"), as *Skills* e a *Experiência*.
-
+2.  **Triagem Anônima (Core):** O sistema oculta propositalmente dados sensíveis (Nome, Género, Foto) durante a primeira fase. O recrutador vê apenas um ID neutro (ex: "Candidato #123"), as _Skills_ e a _Experiência_.
 3.  **Aprovação por Mérito:** Apenas se o candidato for aprovado com base nas suas competências é que avança para a próxima fase (Teste Prático IoT).
 
-Decisões de Arquitetura
------------------------
+---
+
+## Decisões de Arquitetura
 
 A solução foi construída seguindo o padrão **MVC (Model-View-Controller)** com .NET 8, focada na separação de responsabilidades e segurança.
 
 -   **Framework:** ASP.NET Core 8.0 MVC.
-
--   **Banco de Dados:** Oracle Database (via Oracle.EntityFrameworkCore).
-
+-   **Banco de Dados:** Oracle Database (via `Oracle.EntityFrameworkCore`).
 -   **ORM:** Entity Framework Core (Code-First Migrations).
-
 -   **Autenticação:** ASP.NET Core Identity (Gestão de utilizadores e acessos).
-
 -   **Front-end:** Razor Views + Bootstrap 5 + Identidade Visual Personalizada ("Inter" font & Paleta OneMatter).
 
 ### Estrutura da Solução
 
--   **Models (Domínio):** Entidades ricas (Job, Candidate, JobApplication) com regras de negócio e invariantes (ex: não permitir editar vagas fechadas).
+-   **Models (Domínio):** Entidades ricas (`Job`, `Candidate`, `JobApplication`) com regras de negócio e invariantes (ex: não permitir editar vagas fechadas).
 
 -   **ViewModels (Camada de Apresentação):**
 
@@ -56,23 +52,22 @@ A solução foi construída seguindo o padrão **MVC (Model-View-Controller)** c
 
     -   JobsController: Implementa o CRUD completo de vagas.
 
-    -   ApplicationsController: Gere a lógica de anonimização (query com .Select()) e a aprovação de candidatos.
+    -   ApplicationsController: Gere a lógica de anonimização (query com `.Select()`) e a aprovação de candidatos.
 
-Configuração e Variáveis de Ambiente
-------------------------------------
+---
+
+## Configuração e Variáveis de Ambiente
 
 Por questões de segurança, a **String de Conexão** com o banco de dados Oracle **NÃO** está commitada neste repositório. Você deve configurá-la localmente.
 
 ### Pré-requisitos
 
 -   .NET SDK 8.0
-
 -   Acesso a uma instância do Oracle Database.
 
 ### Como Configurar a Conexão
 
 Você tem duas opções para configurar o acesso ao banco:
-
 
 ### Opção 1: User Secrets (Recomendado)
 
@@ -90,14 +85,15 @@ Crie um arquivo chamado **appsettings.Development.json** na raiz do projeto (ao 
 
 ```json
 {
-  "ConnectionStrings": {
-    "DefaultConnection": "User Id=SEU_USER;Password=SUA_SENHA;Data Source=oracle.fiap.com.br:1521/ORCL"
-  }
+    "ConnectionStrings": {
+        "DefaultConnection": "User Id=SEU_USER;Password=SUA_SENHA;Data Source=oracle.fiap.com.br:1521/ORCL"
+    }
 }
 ```
+
 Aqui está a seção "Como Rodar o Projeto" corrigida, com a sintaxe Markdown limpa e os comandos bash arrumados:
 
------
+---
 
 ## Como Rodar o Projeto
 
@@ -126,71 +122,57 @@ dotnet run
 
 Acesse o portal em: `http://localhost:5000` ou `https://localhost:7000` (conforme indicado no terminal).
 
-Navegação e Funcionalidades
-------------------------------
+---
+
+## Navegação e Funcionalidades
 
 O portal é dividido em áreas protegidas por autenticação.
 
 ### 1\. Acesso e Autenticação
 
 -   **Registro/Login:** Acesse através dos botões no canto superior direito ou na Landing Page.
-
 -   **Rota:** /Identity/Account/Login
 
 ### 2\. Gestão de Vagas (CRUD)
 
 -   **Listar Vagas:** Menu "Vagas" ou botão "Gerir as Minhas Vagas".
-
     -   **Rota:** GET /Jobs
-
 -   **Criar Vaga:** Botão "Publicar Nova Vaga".
-
     -   **Rota:** GET/POST /Jobs/Create
-
 -   **Editar/Excluir:** Disponível nas ações de cada vaga.
 
 ### 3\. Triagem Anónima (O Core do Projeto)
 
 -   **Ver Candidatos:** Na lista de vagas, clique no botão verde **"Ver Candidatos"**.
-
     -   **Rota:** GET /Applications/Index/{id} (onde {id} é o ID da Vaga).
-
 -   **Visualização:** O recrutador vê apenas "Candidato #ID", Skills e Experiência.
-
 -   **Aprovar:** Ao clicar em "Aprovar para Teste", o sistema altera o status do candidato e liberta-o para a fase de IoT.
-
     -   **Rota:** POST /Applications/Approve
 
-Exemplos de Uso
-------------------
+---
+
+## Exemplos de Uso
 
 ### Fluxo Principal:
 
 1.  **Login:** O recrutador entra na plataforma.
 
-![Login](https://github.com/user-attachments/assets/e400e155-c9fc-4a25-9bec-aada9d6e3b1e)
+[Image of Login]
 
 2.  **Dashboard:** Vê a Landing Page com os valores da empresa.
 
-![Dashboard](https://github.com/user-attachments/assets/2f99fb0e-0c1f-4a1e-99cf-cc577167fb45)
+[Image of Dashboard]
 
 3.  **Criar Vaga:** Registra uma nova vaga "Desenvolvedor Java Senior".
-
-![Criar](https://github.com/user-attachments/assets/a3bd9e9f-8f1f-4e5d-9a8b-4875289d1c00)
 
 4.  **Triagem:**
 
     -   O recrutador clica em "Ver Candidatos" na vaga criada.
-      ![Ver Candidatos](https://github.com/user-attachments/assets/2ff08c69-1f11-477f-8389-efba486718a1)
 
     -   O sistema apresenta uma lista:
-
-        -   *Candidato #21*: "C#, .NET Core, SQL, Azure" (Status: Aprovado_Etapa1)
-
-        -   *Candidato #24*: "Java, Spring Boot, Angular, MySQL" (Status: Pendente) -> **[APROVAR]**
-
+        -   _Candidato #21_: "C#, .NET Core, SQL, Azure" (Status: Aprovado_Etapa1)
+        -   _Candidato #24_: "Java, Spring Boot, Angular, MySQL" (Status: Pendente) -> **[APROVAR]**
     -   O recrutador analisa as skills (sem ver nomes) e aprova o #24.
-
     -   O status muda para "Aprovado para Teste".
 
-*Global Solution 2025 - FIAP*
+_Global Solution 2025 - FIAP_
