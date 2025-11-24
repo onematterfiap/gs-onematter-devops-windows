@@ -18,7 +18,7 @@ O **OneMatter** é uma plataforma de recrutamento ético projetada para combater
 
 ---
 
-## Visão Geral
+## Visão Geral do Projeto
 
 O objetivo principal deste portal é separar a avaliação técnica da identidade pessoal do candidato.
 
@@ -36,29 +36,67 @@ A solução foi construída seguindo o padrão **MVC (Model-View-Controller)** c
 -   **Banco de Dados:** Oracle Database (via `Oracle.EntityFrameworkCore`).
 -   **ORM:** Entity Framework Core (Code-First Migrations).
 -   **Autenticação:** ASP.NET Core Identity (Gestão de utilizadores e acessos).
--   **Front-end:** Razor Views + Bootstrap 5 + Identidade Visual Personalizada ("Inter" font & Paleta OneMatter).
+-   **Front-end:** Razor Views, Bootstrap 5 e Identidade Visual Personalizada.
 
 ### Estrutura da Solução
 
--   **Models (Domínio):** Entidades ricas (`Job`, `Candidate`, `JobApplication`) com regras de negócio e invariantes (ex: não permitir editar vagas fechadas).
-
--   **ViewModels (Camada de Apresentação):**
-
-    -   AnonymousCandidateViewModel: O componente chave que garante a privacidade, transportando apenas dados técnicos para a View.
-
-    -   CreateJobViewModel: Para validação de entrada de dados (Data Annotations).
-
--   **Controllers:**
-
-    -   JobsController: Implementa o CRUD completo de vagas.
-
-    -   ApplicationsController: Gere a lógica de anonimização (query com `.Select()`) e a aprovação de candidatos.
+-   **Models (Domínio):** Entidades ricas (`Job`, `Candidate`, `JobApplication`) com regras de negócio e invariantes.
+-   **ViewModels (Apresentação):** Inclui o `AnonymousCandidateViewModel`, chave para a funcionalidade de privacidade.
+-   **Controllers:** `JobsController` (CRUD de vagas) e `ApplicationsController` (lógica de anonimização e aprovação).
 
 ---
 
-## Configuração e Variáveis de Ambiente
+# DEPLOY NO AZURE (Containerização)
 
-Por questões de segurança, a **String de Conexão** com o banco de dados Oracle **NÃO** está commitada neste repositório. Você deve configurá-la localmente.
+A aplicação está empacotada em um contêiner Docker para garantir portabilidade e facilitar o deploy em serviços de hospedagem modernos como o Azure App Service ou Azure Container Instances (ACI).
+
+## URL DE ACESSO PÚBLICO
+
+A aplicação está acessível no IP público do ambiente Azure na porta `8080`.
+
+**URL Base:** **`http://68.211.123.73:8080`**
+
+## Configuração de Contêineres
+
+A estratégia de deploy utiliza um **Build Multi-Stage** no `Dockerfile` para gerar uma imagem de execução leve e um `docker-compose.yml` para injetar variáveis de ambiente críticas.
+
+### Detalhes do Dockerfile
+
+-   **Build Otimizado:** Utiliza o `dotnet sdk` para compilar e o `dotnet aspnet` (JRE) para o runtime, resultando em uma imagem final reduzida.
+-   **Segurança:** O contêiner é executado com um usuário sem privilégios (`USER userapp`).
+-   **Exposição de Porta:** A porta `8080` é exposta, conforme definido na URL de deploy.
+
+```Dockerfile
+
+# ... (Fase de Build)
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENV ASPNETCORE_ENVIRONMENT=Production
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "OneMatter.dll"]
+```
+
+### Detalhes do Docker Compose
+
+O `docker-compose.yml` é essencial para injetar a **Connection String do Oracle** como variável de ambiente no contêiner, uma prática de segurança recomendada (Secret Injection):
+
+```yaml
+version: '3.8'
+services:
+onematter-portal:
+image: onematter-portal-recrutador
+build:
+context: .
+dockerfile: Dockerfile
+ports: - "8080:8080"
+environment: # A String de Conexão é injetada aqui (ou via User Secrets no Azure) - ConnectionStrings\_\_DefaultConnection=User Id=SEU_USER;Password=SUA_SENHA;Data Source=oracle.fiap.com.br:1521/ORCL
+```
+
+---
+
+## Configuração e Execução Local
 
 ### Pré-requisitos
 
@@ -67,7 +105,7 @@ Por questões de segurança, a **String de Conexão** com o banco de dados Oracl
 
 ### Como Configurar a Conexão
 
-Você tem duas opções para configurar o acesso ao banco:
+Por questões de segurança, a String de Conexão com o Oracle **NÃO** está commitada. Configure-a usando as seguintes opções:
 
 ### Opção 1: User Secrets (Recomendado)
 
@@ -81,7 +119,7 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "User Id=SEU_USER;
 
 ### Opção 2: Arquivo `appsettings.Development.json`
 
-Crie um arquivo chamado **appsettings.Development.json** na raiz do projeto (ao lado do `appsettings.json`) e cole:
+Crie um arquivo chamado **appsettings.Development.json** na raiz do projeto e cole:
 
 ```json
 {
@@ -91,22 +129,20 @@ Crie um arquivo chamado **appsettings.Development.json** na raiz do projeto (ao 
 }
 ```
 
-Aqui está a seção "Como Rodar o Projeto" corrigida, com a sintaxe Markdown limpa e os comandos bash arrumados:
-
 ---
 
 ## Como Rodar o Projeto
 
 Siga estes passos para executar a aplicação pela primeira vez:
 
-### 1\. Clonar o Repositório
+### 1. Clonar o Repositório
 
 ```bash
 git clone https://github.com/onematterfiap/gs-onematter-dotnet.git
 cd gs-onematter-dotnet
 ```
 
-### 2\. Aplicar Migrations (Criar Banco de Dados)
+### 2. Aplicar Migrations (Criar Banco de Dados)
 
 O projeto utiliza EF Core Migrations. Execute o comando abaixo para criar as tabelas (`Jobs`, `Candidates`, `JobApplications`, `AspNetUsers`, etc.) no seu banco Oracle:
 
@@ -114,7 +150,7 @@ O projeto utiliza EF Core Migrations. Execute o comando abaixo para criar as tab
 dotnet ef database update
 ```
 
-### 3\. Executar a Aplicação
+### 3. Executar a Aplicação
 
 ```bash
 dotnet run
@@ -128,12 +164,12 @@ Acesse o portal em: `http://localhost:5000` ou `https://localhost:7000` (conform
 
 O portal é dividido em áreas protegidas por autenticação.
 
-### 1\. Acesso e Autenticação
+### 1. Acesso e Autenticação
 
 -   **Registro/Login:** Acesse através dos botões no canto superior direito ou na Landing Page.
 -   **Rota:** /Identity/Account/Login
 
-### 2\. Gestão de Vagas (CRUD)
+### 2. Gestão de Vagas (CRUD)
 
 -   **Listar Vagas:** Menu "Vagas" ou botão "Gerir as Minhas Vagas".
     -   **Rota:** GET /Jobs
@@ -141,12 +177,12 @@ O portal é dividido em áreas protegidas por autenticação.
     -   **Rota:** GET/POST /Jobs/Create
 -   **Editar/Excluir:** Disponível nas ações de cada vaga.
 
-### 3\. Triagem Anónima (O Core do Projeto)
+### 3. Triagem Anônima (O Core do Projeto)
 
 -   **Ver Candidatos:** Na lista de vagas, clique no botão verde **"Ver Candidatos"**.
     -   **Rota:** GET /Applications/Index/{id} (onde {id} é o ID da Vaga).
 -   **Visualização:** O recrutador vê apenas "Candidato #ID", Skills e Experiência.
--   **Aprovar:** Ao clicar em "Aprovar para Teste", o sistema altera o status do candidato e liberta-o para a fase de IoT.
+-   **Aprovar:** Ao clicar em "Aprovar para Teste", o sistema altera o status do candidato e o libera para a fase de IoT.
     -   **Rota:** POST /Applications/Approve
 
 ---
@@ -157,11 +193,7 @@ O portal é dividido em áreas protegidas por autenticação.
 
 1.  **Login:** O recrutador entra na plataforma.
 
-[Image of Login]
-
 2.  **Dashboard:** Vê a Landing Page com os valores da empresa.
-
-[Image of Dashboard]
 
 3.  **Criar Vaga:** Registra uma nova vaga "Desenvolvedor Java Senior".
 
